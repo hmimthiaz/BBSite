@@ -1,0 +1,13 @@
+services:
+  Site.CMSEvents:
+    class: BlueBeetle\BBSiteBundle\EventListener\BBCMSEventListener
+    arguments: [@service_container,@request_stack]
+    tags:
+      - { name: kernel.event_listener, event: BWCMS.Skin.Register, method: onSkinRegister }
+      - { name: kernel.event_listener, event: BWCMS.Content.Register, method: onContentRegister }
+      - { name: kernel.event_listener, event: BWCMS.Preference.Register, method: onPreferenceRegister }
+      - { name: kernel.event_listener, event: BWCMS.Route.Loader, method: onRouteLoader }
+      - { name: kernel.event_listener, event: BWCMS.Admin.MenuLeft, method: onAdminMenuLeft }
+  Site.Common:
+    class: BlueBeetle\BBSiteBundle\Classes\Service\CommonService
+    arguments: [@service_container,@request_stack]

@@ -1,0 +1,31 @@
+{% extends skin('Base.html.twig') %}
+
+{% block body %}
+
+        <h1>{{ loc('I am boss from locale') }}</h1>
+
+        <h1>{{ pref.sectionNewsTitle }}</h1>
+        <div class="newsDec">
+            {{ pref.sectionNewsDesc | raw  }}
+        </div>
+
+
+    {% if pref.leaders is defined and pref.leaders is not empty %}
+            <ul>
+                {% for leader in pref.leaders %}
+                        <li>
+                                <img src="{{ thumb(leader.image,'leadership_team_image') }}" alt="{{ leader.name }}" title="{{ leader.name }}">
+                            {% if leader.name is defined and leader.name is not empty %}
+                                    <h3>{{ leader.name }}</h3>
+                            {% endif %}
+                            {% if leader.designation is defined and leader.designation is not empty %}
+                                    <h4>{{ leader.designation }}</h4>
+                            {% endif %}
+                        </li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+
+
+
+{% endblock %}

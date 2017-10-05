@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% if openGraphImage is not defined %}
+    {% set globalOpenGraphImage = pref('General','openGraphImage') %}
+    {% if globalOpenGraphImage is not empty %}
+        {% set openGraphImage = globalOpenGraphImage %}
+    {% endif %}
+{% endif %}
+{% set siteTile = pref('General','title') %}
+{% set siteSlug = app.request.attributes.get('_route_params')['siteSlug'] |escape %}
+{% set googleAnalyticsCode = pref('General','googleAnalyticsCode') %}
+{% set currentRoute = app.request.attributes.get('_route') |escape %}
+{% set searchQuery = app.request.get('query') | escape %}
+{% set siteURLPrefix = '' %}
+{% if app.environment == 'dev' %}
+    {% set siteURLPrefix = '/app_dev.php' %}
+{% endif %}
+<html lang ="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block seoTitle %}{{ pageTitle is defined ? pageTitle ~ ' - ' }}{{ siteTile }}{% endblock %}</title>
+    <meta name="description" content="{% block seoDescription %}{% if pageDescription is defined %}{{ pageDescription }}{% else %}{{ pref('General','description') }}{% endif %}{% endblock %}" />
+    <meta name="keywords"  content="{% block seoKeywords %}{% if pageKeywords is defined %}{{ pageKeywords }}{% else %}{{ pref('General','keywords') }}{% endif %}{% endblock %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Injazat" />
+    <meta name="generator" content="BWCMS" />
+    <meta name="robots" content="All" />
+    {% block headerExtraMetas %}{% endblock %}
+    {% block openGraphMetas %}
+        {% if pageTitle is defined and pageTitle is not empty %}
+            <meta property="og:title" content="{{ pageTitle }}" />
+        {% endif %}
+        {% if pageDescription is defined and pageDescription is not empty %}
+            <meta property="og:description" content="{{ pageDescription }}" />
+        {% endif %}
+        {% if openGraphImage is defined and openGraphImage is not empty %}
+            <meta property="og:image" content="{{ thumb(openGraphImage,'openGraphImageThumb',1.0,true) }}" />
+        {% endif %}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{app.request.uri | escape }}" />
+    {% endblock %}
+    {% block preHeaderScripts %}{% endblock %}
+    {% block headerScripts %}
+        <link rel="stylesheet" href="{{ skinAsset('css/style.css') }}?c={{ date().timestamp }}">
+        <!--[if lt IE 9]>
+        <![endif]-->
+    {% endblock %}
+    {% block postHeaderScripts %}{% endblock %}
+</head>
+<body>
+    {#{% block header %}#}
+       {#<p> I am headder global</p>#}
+    {#{% endblock %}#}
+
+    {% block body %}
+        <h1>Hello Blue Beetle</h1>
+    {% endblock %}
+
+    {#{% block footer %}#}
+        {#{% include skin('Footer.html.twig') %}#}
+    {#{% endblock %}#}
+
+    {% block preFooterScripts %}
+        <script src="{{ skinAsset('js/jquery.min.js') }}"></script>
+    {% endblock %}
+
+    {% block footerScripts %}
+        <script src="{{ skinAsset('js/main.js') }}?c={{ date().timestamp }}"></script>
+    {% endblock %}
+
+    {% block postFooterScripts %}{% endblock %}
+    {% if googleAnalyticsCode is not empty %}
+        <script language="JavaScript">
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', '{{ googleAnalyticsCode }}', 'auto');
+            ga('send', 'pageview');
+        </script>
+    {% endif %}
+</body>
+</html>
